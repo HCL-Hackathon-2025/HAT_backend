@@ -2,11 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { connectDB } from './db/connection.js';
-import StaffListRoutes from './routes/StaffListRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+    origin: '*', // Allow all origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow specific methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+    credentials: true // Allow credentials
+};
+app.use(cors(
+    corsOptions
+));
 app.use(bodyParser.json({
     limit: '5mb' 
 }));
