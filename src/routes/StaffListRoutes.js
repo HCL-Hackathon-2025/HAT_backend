@@ -3,6 +3,6 @@ import { getStaffList } from "../controllers/StaffListController.js";
 
 const router = Router();
 
-router.get('/user/list', getStaffList )
+router.get('/list', getStaffList )
 
 export default router;
