@@ -1,8 +1,9 @@
 import {Router} from "express";
-import { getStaffList } from "../controllers/StaffListController.js";
+import { getStaffList, addStaffMember } from "../controllers/StaffListController.js";
 
 const router = Router();
 
-router.get('/user/list', getStaffList )
+router.get('/list', getStaffList );
+router.post('/add', addStaffMember);
 
 export default router;

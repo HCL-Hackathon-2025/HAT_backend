@@ -1,6 +1,6 @@
 
 import { models } from "../models/index.js";
-const { USER } = models;
+const { STAFF, DEPARTMENT } = models;
 
 export const getStaffList = async(req,res)=>{
     const {role = "admin"} = req.user||{}
@@ -10,7 +10,7 @@ export const getStaffList = async(req,res)=>{
     }
 
     try {
-        const users = await USER.findAll({
+        const users = await STAFF.findAll({
         attributes: {
             exclude: ['password', 'createdAt', 'updatedAt']
             }
@@ -23,5 +23,50 @@ export const getStaffList = async(req,res)=>{
     } catch (error) {
         console.error("Error fetching users:", error);
         return res.status(500).json({message: "internal server error"})
+    }
+}
+
+export const addStaffMember = async(req, res) => {
+    const { role = "admin" } = req.user || {};
+
+
+    if (role !== 'admin' ) {
+        return res.status(403).json({ message: "Forbidden: You do not have permission to access this resource." });
+    }
+
+    try {
+        const { email, password, fullname, role } = req.body;
+
+        const existingUser = await STAFF.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ message: "User with this email already exists." });
+        }
+
+        const department = req.body.department;
+
+        const departmentData =  await DEPARTMENT.findOne({
+            where: { name: department }
+        });
+
+        if (!departmentData) {
+            return res.status(400).json({ message: "Invalid department." });
+        }
+
+        if (!department) {
+            return res.status(400).json({ message: "Department is required." });
+        }
+
+        const newUser = await STAFF.create({
+            email,
+            password,
+            fullname,
+            role,
+            department_id:departmentData.id,
+        });
+
+        return res.status(201).json(newUser);
+    } catch (error) {
+        console.error("Error adding staff member:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }

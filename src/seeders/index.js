@@ -1,6 +1,7 @@
 import { models } from "../models/index.js";
+import bcrypt from "bcrypt";
 
-const { DEPARTMENT, ROLE } = models;
+const { DEPARTMENT, ROLE, STAFF } = models;
 
 const ROLES_SEED = [
     { name: 'admin', permissions: ["all"] },
@@ -16,6 +17,14 @@ const DEPARTMENTS_SEED = [
     {name: "General Surgery"},
     {name: "Emergency"},
 ]
+
+const adminUser = {
+    fullname: "Admin User",
+    password: "admin123",
+    email: "admin@xyz.com",
+    isAdmin: true,
+
+} 
 
 export const createSeeders = async(req, res)=> {
     try {
@@ -44,6 +53,25 @@ export const createSeeders = async(req, res)=> {
                 console.log(`Department ${department.name} already exists.`);
             }
         }
+
+        // Seed admin user
+        const hashedPassword = await bcrypt.hash(adminUser.password, 10);
+        const [admin, created] = await STAFF.findOrCreate({
+            where: { email: adminUser.email },
+            defaults: {
+                ...adminUser,
+                password: hashedPassword,
+                isMedicalStaff: true,
+                role_id: (await ROLE.findOne({ where: { name: 'admin' } })).id,
+                department_id: (await DEPARTMENT.findOne({ where: { name: 'CArdiology' } })).id
+            }
+        });
+        if (created) {
+            console.log(`Admin user ${admin.fullname} created.`);
+        } else {
+            console.log(`Admin user ${admin.fullname} already exists.`);
+        }
+
 
         res.status(200).json({ message: "Seed data created successfully." });
     } catch (error) {
