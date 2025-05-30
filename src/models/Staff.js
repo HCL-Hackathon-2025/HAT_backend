@@ -1,13 +1,17 @@
 import { DataTypes, UUIDV4 } from "sequelize";
 
-export const defineUserModel = (sequelize) => {
-    const User = sequelize.define("User", {
+export const defineStaffModel = (sequelize) => {
+    const Staff = sequelize.define("Staff", {
         id:{
             type: DataTypes.UUID,
             defaultValue: UUIDV4,
             primaryKey: true
         },
         fullname: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        password:{
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -60,7 +64,7 @@ export const defineUserModel = (sequelize) => {
             type: DataTypes.UUID,
             allowNull: true,
             references: {
-                model: 'Users',
+                model: 'Staffs',
                 key: 'id'
             }
         },
@@ -71,5 +75,5 @@ export const defineUserModel = (sequelize) => {
         },
     })
 
-    return User;
+    return Staff;
 }

@@ -16,7 +16,7 @@ export const defineDepartmentModel = (sequelize) => {
             type: DataTypes.UUID,
             allowNull: true,
             references: {
-                model: 'Users',
+                model: 'Staff',
                 key: 'id'
             }
         }
