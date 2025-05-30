@@ -30,3 +30,5 @@ export const connectDB = async() => {
         console.error(`Error in connection:: `,error)
     }
 }
+
+export const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
