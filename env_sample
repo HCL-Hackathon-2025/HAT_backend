@@ -1,0 +1,10 @@
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=gyan
+DB_PASSWORD=password
+DB_DATABASE=HAT
+DB_DIALECT=postgres
+
+# Application Port (example)
+APP_PORT=3000
